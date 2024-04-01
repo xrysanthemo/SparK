@@ -7,12 +7,12 @@ See [/INSTALL.md](/INSTALL.md) to prepare `pip` dependencies and the ImageNet da
 
 ## Tutorial for pretraining your own CNN model
 
-See [/pretrain/models/custom.py](/pretrain/models/custom.py). Your todo list is:
+See [/pretrain/models/custom.py](/pretrain/models/spark_custom.py). Your todo list is:
 
-- implement `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/custom.py#L20).
-- implement `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/custom.py#L29).
-- implement `forward` in [/pretrain/models/custom.py line38](/pretrain/models/custom.py#L38).
-- define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py line54](/pretrain/models/custom.py#L53-L54).
+- implement `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/spark_custom.py#L20).
+- implement `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/spark_custom.py#L29).
+- implement `forward` in [/pretrain/models/custom.py line38](/pretrain/models/spark_custom.py#L38).
+- define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py line54](/pretrain/models/spark_custom.py#L53-L54).
 - add default kwargs of `your_convnet(...)` in [/pretrain/models/\_\_init\_\_.py line34](/pretrain/models/__init__.py#L34).
 - **Note: see [#54](/../../issues/54) if your CNN contains SE module or global average pooling layer, and see [#56](/../../issues/56) if it contains GroupNorm**.
 

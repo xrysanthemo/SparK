@@ -12,13 +12,14 @@ from functools import partial
 from typing import List
 
 import torch
+from timm import create_model
 from torch.nn.parallel import DistributedDataParallel
 from torch.utils.data import DataLoader
 
 import dist
 import encoder
 from decoder import LightDecoder
-from models import build_sparse_encoder
+from models import pretrain_default_model_kwargs
 from sampler import DistInfiniteBatchSampler, worker_init_fn
 from spark import SparK
 from utils import arg_util, misc, lamb
@@ -26,6 +27,15 @@ from utils.imagenet import build_dataset_to_pretrain
 from utils.lr_control import lr_wd_annealing, get_param_groups
 
 
+def build_sparse_encoder(name: str, input_size: int, sbn=False, drop_path_rate=0.0, verbose=False):
+    from encoder import SparseEncoder
+    kwargs = pretrain_default_model_kwargs[name]
+    if drop_path_rate != 0:
+        kwargs['drop_path_rate'] = drop_path_rate
+    print(f'[build_sparse_encoder] model kwargs={kwargs}')
+    cnn = create_model(name, **kwargs)
+
+    return SparseEncoder(cnn, input_size=input_size, sbn=sbn, verbose=verbose)
 class LocalDDP(torch.nn.Module):
     def __init__(self, module):
         super(LocalDDP, self).__init__()

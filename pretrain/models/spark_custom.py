@@ -7,8 +7,9 @@
 import torch
 import torch.nn as nn
 from typing import List
-from timm.models.registry import register_model
-
+from timm.models import register_model
+from torchvision.models.resnet import resnet50
+import torch.nn.functional as F
 
 class YourConvNet(nn.Module):
     """
@@ -24,7 +25,7 @@ class YourConvNet(nn.Module):
         :return: the TOTAL downsample ratio of the ConvNet.
         E.g., for a ResNet-50, this should return 32.
         """
-        raise NotImplementedError
+        return 32
     
     def get_feature_map_channels(self) -> List[int]:
         """
@@ -33,7 +34,7 @@ class YourConvNet(nn.Module):
         :return: a list of the number of channels of each feature map.
         E.g., for a ResNet-50, this should return [256, 512, 1024, 2048].
         """
-        raise NotImplementedError
+        return [256, 512, 1024, 2048]
     
     def forward(self, inp_bchw: torch.Tensor, hierarchical=False):
         """
@@ -47,7 +48,35 @@ class YourConvNet(nn.Module):
               E.g., for a ResNet-50, it should return a list [1st_feat_map, 2nd_feat_map, 3rd_feat_map, 4th_feat_map].
                     for an input size of 224, the shapes are [(B, 256, 56, 56), (B, 512, 28, 28), (B, 1024, 14, 14), (B, 2048, 7, 7)]
         """
-        raise NotImplementedError
+
+        def forward(self, x, hierarchical=False):
+            """ this forward function is a modified version of `timm.models.resnet.ResNet.forward`
+            #FIXME na to parw apo ta PyTorch resnets
+            >>> ResNet.forward
+            """
+            x = self.conv1(x)
+            x = self.bn1(x)
+            x = self.act1(x)
+            x = self.maxpool(x)
+
+            if hierarchical:
+                ls = []
+                x = self.layer1(x);
+                ls.append(x)
+                x = self.layer2(x);
+                ls.append(x)
+                x = self.layer3(x);
+                ls.append(x)
+                x = self.layer4(x);
+                ls.append(x)
+                return ls
+            else:
+                x = self.global_pool(x)
+                if self.drop_rate:
+                    x = F.dropout(x, p=float(self.drop_rate), training=self.training)
+                x = self.fc(x)
+                return x
+
 
 
 @register_model

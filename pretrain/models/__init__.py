@@ -7,12 +7,11 @@
 import torch
 from timm import create_model
 from timm.loss import SoftTargetCrossEntropy
-from timm.models.layers import drop
+from timm.layers import drop
 
-
-from models.convnext import ConvNeXt
-from models.resnet import ResNet
-from models.custom import YourConvNet
+from models.spark_convnext import ConvNeXt
+from models.spark_resnet import ResNet
+from models.spark_custom import YourConvNet
 _import_resnets_for_timm_registration = (ResNet,)
 
 
@@ -33,6 +32,7 @@ for clz in (torch.nn.CrossEntropyLoss, SoftTargetCrossEntropy, drop.DropPath):
 
 pretrain_default_model_kwargs = {
     'your_convnet': dict(),
+    'resnet18': dict(),
     'resnet50': dict(drop_path_rate=0.05),
     'resnet101': dict(drop_path_rate=0.08),
     'resnet152': dict(drop_path_rate=0.10),
@@ -47,14 +47,5 @@ for kw in pretrain_default_model_kwargs.values():
     kw['global_pool'] = ''
 
 
-def build_sparse_encoder(name: str, input_size: int, sbn=False, drop_path_rate=0.0, verbose=False):
-    from encoder import SparseEncoder
-    
-    kwargs = pretrain_default_model_kwargs[name]
-    if drop_path_rate != 0:
-        kwargs['drop_path_rate'] = drop_path_rate
-    print(f'[build_sparse_encoder] model kwargs={kwargs}')
-    cnn = create_model(name, **kwargs)
-    
-    return SparseEncoder(cnn, input_size=input_size, sbn=sbn, verbose=verbose)
+
 

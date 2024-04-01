@@ -4,7 +4,6 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 from typing import List
-
 import torch
 import torch.nn.functional as F
 from timm.models.resnet import ResNet
@@ -24,7 +23,7 @@ def get_feature_map_channels(self: ResNet) -> List[int]:
 # hack: override the forward function of `timm.models.resnet.ResNet`
 def forward(self, x, hierarchical=False):
     """ this forward function is a modified version of `timm.models.resnet.ResNet.forward`
-    >>> ResNet.forward
+    # >>> ResNet.forward
     """
     x = self.conv1(x)
     x = self.bn1(x)
@@ -45,7 +44,7 @@ def forward(self, x, hierarchical=False):
         x = self.fc(x)
         return x
 
-
+#edw peirazw to resnet.. ti ginetai omws me ta conv?
 ResNet.get_downsample_ratio = get_downsample_ratio
 ResNet.get_feature_map_channels = get_feature_map_channels
 ResNet.forward = forward
@@ -54,7 +53,8 @@ ResNet.forward = forward
 @torch.no_grad()
 def convnet_test():
     from timm.models import create_model
-    cnn = create_model('resnet50')
+    # cnn = create_model('resnet50')
+    cnn = create_model('resnet18') #test
     print('get_downsample_ratio:', cnn.get_downsample_ratio())
     print('get_feature_map_channels:', cnn.get_feature_map_channels())
     

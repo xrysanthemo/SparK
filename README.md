@@ -160,7 +160,7 @@ res50.load_state_dict(state.get('module', state), strict=False)     # just in ca
 
 - **Pretraining**
   - any ResNet or ConvNeXt on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
-  - **your own CNN model**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/custom.py)
+  - **your own CNN model**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/spark_custom.py)
 
 
 - **Finetuning**
